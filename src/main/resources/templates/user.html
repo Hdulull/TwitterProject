@@ -1,17 +1,24 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <div th:replace="fragments/fragment :: head"></div>
 </head>
 <body>
 <div th:replace="fragments/fragment :: navbar"></div>
 <div class="container">
     <h2>Profile for <span th:text="${user.firstName}"></span>
     <span th:text="${user.lastName}"></span> - <span style="color: #00aced">
-        <span th:text="${user.username}"></span></span>
+        @<span th:text="${user.username}"></span></span>
     </h2>
     <h5>Joined <span th:text="${#dates.format(user.createdAt, 'MMMM dd, yyyy')}"></span></h5>
+    <form th:action="@{/follow/} + ${user.username}" th:if="${!following && !isSelfPage}" method="post">
+        <button style="float:right" type="Submit" class="btn btn-lg btn-success">Follow</button>
+    </form>
+    <form th:action="@{/unfollow/} + ${user.username}" th:if="${following && !isSelfPage}" method="post">
+        <button style="float:right" type="Submit" class="btn btn-lg btn-primary unfollow_btn">Following</button>
+    </form>
     <div th:if="${not #lists.isEmpty(tweetList)}">
     <h3>Tweets</h3>
     <div class="list-group" th:each="tweet:${tweetList}">
